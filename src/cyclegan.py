@@ -242,54 +242,54 @@ def check_for_checkpoint(manager, ckpt):
         print("Initializing from scratch")
 
 
-# if __name__=="main":
-gen_g_ckpt = tf.train.Checkpoint(step=tf.Variable(1), optimizer=gen_g_optimizer, net=generator_g)
-gen_f_ckpt = tf.train.Checkpoint(step=tf.Variable(1), optimizer=gen_f_optimizer, net=generator_f)
-dis_x_ckpt = tf.train.Checkpoint(step=tf.Variable(1), optimizer=dis_x_optimizer, net=discriminator_x)
-dis_y_ckpt = tf.train.Checkpoint(step=tf.Variable(1), optimizer=dis_y_optimizer, net=discriminator_y)
+if __name__=="main":
+    gen_g_ckpt = tf.train.Checkpoint(step=tf.Variable(1), optimizer=gen_g_optimizer, net=generator_g)
+    gen_f_ckpt = tf.train.Checkpoint(step=tf.Variable(1), optimizer=gen_f_optimizer, net=generator_f)
+    dis_x_ckpt = tf.train.Checkpoint(step=tf.Variable(1), optimizer=dis_x_optimizer, net=discriminator_x)
+    dis_y_ckpt = tf.train.Checkpoint(step=tf.Variable(1), optimizer=dis_y_optimizer, net=discriminator_y)
 
-gen_g_manager = tf.train.CheckpointManager(gen_g_ckpt, CHECKPOINT_DIR_GEN_G, max_to_keep=3)
-gen_f_manager = tf.train.CheckpointManager(gen_f_ckpt, CHECKPOINT_DIR_GEN_F, max_to_keep=3)
-dis_x_manager = tf.train.CheckpointManager(dis_x_ckpt, CHECKPOINT_DIR_DIS_X, max_to_keep=3)
-dis_y_manager = tf.train.CheckpointManager(dis_y_ckpt, CHECKPOINT_DIR_DIS_Y, max_to_keep=3)
+    gen_g_manager = tf.train.CheckpointManager(gen_g_ckpt, CHECKPOINT_DIR_GEN_G, max_to_keep=3)
+    gen_f_manager = tf.train.CheckpointManager(gen_f_ckpt, CHECKPOINT_DIR_GEN_F, max_to_keep=3)
+    dis_x_manager = tf.train.CheckpointManager(dis_x_ckpt, CHECKPOINT_DIR_DIS_X, max_to_keep=3)
+    dis_y_manager = tf.train.CheckpointManager(dis_y_ckpt, CHECKPOINT_DIR_DIS_Y, max_to_keep=3)
 
-check_for_checkpoint(gen_g_manager, gen_g_ckpt)
-check_for_checkpoint(gen_f_manager, gen_f_ckpt)
-check_for_checkpoint(dis_x_manager, dis_x_ckpt)
-check_for_checkpoint(dis_y_manager, dis_y_ckpt)
+    check_for_checkpoint(gen_g_manager, gen_g_ckpt)
+    check_for_checkpoint(gen_f_manager, gen_f_ckpt)
+    check_for_checkpoint(dis_x_manager, dis_x_ckpt)
+    check_for_checkpoint(dis_y_manager, dis_y_ckpt)
 
-# Manually loop through epochs
-epoch = int(gen_g_ckpt.step)
-while epoch < epochs:
-    print('Epoch: {}'.format(epoch))
-    start = time.time()
+    # Manually loop through epochs
+    epoch = int(gen_g_ckpt.step)
+    while epoch < epochs:
+        print('Epoch: {}'.format(epoch))
+        start = time.time()
 
-    # Each batch
-    for k, (real_x, real_y) in enumerate(tf.data.Dataset.zip((train_x, train_y))):
-        if k % 100 == 0: print(k)
-        # Train step
-        step(tf.reshape(real_x, (1, img_rows, img_cols, channels)), tf.reshape(real_y, (1, img_rows, img_cols, channels)))
-    save_path_g = gen_g_manager.save()
-    save_path_f = gen_f_manager.save()
-    save_path_x = dis_x_manager.save()
-    save_path_y = dis_y_manager.save()
-    print("Saved checkpoint for step {}: {}, {}, {}, {}".format(int(gen_g_ckpt.step.assign_add(1)),
-                                                                save_path_g, save_path_f, save_path_x, save_path_y))
-    generator_g.save('generator_g.h5')
-    generator_f.save('generator_f.h5')
-    discriminator_x.save('discriminator_x.h5')
-    discriminator_y.save('discriminator_y.h5')
-    print('Time taken: {}'.format(time.time() - start))
+        # Each batch
+        for k, (real_x, real_y) in enumerate(tf.data.Dataset.zip((train_x, train_y))):
+            if k % 100 == 0: print(k)
+            # Train step
+            step(tf.reshape(real_x, (1, img_rows, img_cols, channels)), tf.reshape(real_y, (1, img_rows, img_cols, channels)))
+        save_path_g = gen_g_manager.save()
+        save_path_f = gen_f_manager.save()
+        save_path_x = dis_x_manager.save()
+        save_path_y = dis_y_manager.save()
+        print("Saved checkpoint for step {}: {}, {}, {}, {}".format(int(gen_g_ckpt.step.assign_add(1)),
+                                                                    save_path_g, save_path_f, save_path_x, save_path_y))
+        generator_g.save('./temp/models/generator_g.h5')
+        generator_f.save('./temp/models/generator_f.h5')
+        discriminator_x.save('./temp/models/discriminator_x.h5')
+        discriminator_y.save('./temp/models/discriminator_y.h5')
+        print('Time taken: {}'.format(time.time() - start))
 
-    epoch += 1
+        epoch += int(gen_g_ckpt.step.assign_add(1))
 
-    # for _ in range(10):
-    #     generate_images()
+        # for _ in range(10):
+        #     generate_images()
 
-for _ in range(10):
-    generate_images()
+    for _ in range(10):
+        generate_images()
 
-# generator_g.save(f'generator_g.h5')
-# generator_f.save(f'generator_f.h5')
-# discriminator_x.save(f'discriminator_x.h5')
-# discriminator_y.save(f'discriminator_y.h5')
+    # generator_g.save(f'generator_g.h5')
+    # generator_f.save(f'generator_f.h5')
+    # discriminator_x.save(f'discriminator_x.h5')
+    # discriminator_y.save(f'discriminator_y.h5')
