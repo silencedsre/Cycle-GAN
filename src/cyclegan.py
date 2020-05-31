@@ -16,13 +16,26 @@ import tensorflow_datasets as tfds
 
 CURRENT_PATH = Path(__file__)
 # TRAIN_LOG_DIR = f'./temp/train/{datetime.datetime.now()}/logs'
-CHECKPOINT_DIR_GEN_G = f'./temp/train/checkpoints_gen_g/'
-CHECKPOINT_DIR_GEN_F = f'./temp/train/checkpoints_gen_f/'
-CHECKPOINT_DIR_DIS_X = f'./temp/train/checkpoints_dis_x/'
-CHECKPOINT_DIR_DIS_Y = f'./temp/train/checkpoints_dis_y/'
+
+Path(CURRENT_PATH.parent/"temp/train/checkpoints_gen_g/").mkdir(parents=True, exist_ok=True)
+Path(CURRENT_PATH.parent/"temp/train/checkpoints_gen_f/").mkdir(parents=True, exist_ok=True)
+Path(CURRENT_PATH.parent/"temp/train/checkpoints_dis_x/").mkdir(parents=True, exist_ok=True)
+Path(CURRENT_PATH.parent/"temp/train/checkpoints_dis_y/").mkdir(parents=True, exist_ok=True)
+
 Path(CURRENT_PATH.parent/"temp/models").mkdir(parents=True, exist_ok=True)
-MODEL_DIR = Path(__file__).parent/"temp/models"
-# WEIGHTS_PATH = os.path.join(str(MODEL_DIR), 'weights.h5')
+
+
+# CHECKPOINT_DIR_GEN_G = f'./temp/train/checkpoints_gen_g/'
+# CHECKPOINT_DIR_GEN_F = f'./temp/train/checkpoints_gen_f/'
+# CHECKPOINT_DIR_DIS_X = f'./temp/train/checkpoints_dis_x/'
+# CHECKPOINT_DIR_DIS_Y = f'./temp/train/checkpoints_dis_y/'
+
+CHECKPOINT_DIR_GEN_G = str(Path(__file__).parent/"temp/train/checkpoints_gen_g/")
+CHECKPOINT_DIR_GEN_F = str(Path(__file__).parent/"temp/train/checkpoints_gen_f/")
+CHECKPOINT_DIR_DIS_X = str(Path(__file__).parent/"temp/train/checkpoints_dis_x/")
+CHECKPOINT_DIR_DIS_Y = str(Path(__file__).parent/"temp/train/checkpoints_dis_y/")
+
+MODEL_DIR = str(Path(__file__).parent/"temp/models")
 
 # Load dataset
 
@@ -95,7 +108,7 @@ def uk(k):
 
 def generator():
     gen_input = Input(shape=(img_rows, img_cols, channels))
-    
+
     # Layers for the encoder part of the model
     encoder_layers = [
         dk(64, False),
@@ -126,7 +139,7 @@ def generator():
     for layer in encoder_layers:
         gen = layer(gen)
         skips.append(gen)
-    
+
     skips = skips[::-1][1:] # Reverse for looping and get rid of the layer that directly connects to decoder
 
     # Add all the decoder layers and skip connections
@@ -134,10 +147,10 @@ def generator():
         gen = layer(gen)
         gen = Concatenate()([gen, skip_layer])
 
-    
+
     # Final layer
     gen = Conv2DTranspose(channels, (3, 3), strides=2, padding='same', kernel_initializer=weight_initializer, activation='tanh')(gen)
-    
+
     # Compose model
     return Model(gen_input, gen)
 
@@ -218,11 +231,11 @@ def generate_images():
     # Sample images
     x = next(iter(test_x.shuffle(1000))).numpy()
     y = next(iter(test_y.shuffle(1000))).numpy()
-    
+
     # Get predictions for those images
     y_hat = generator_g.predict(x.reshape((1, img_rows, img_cols, channels)))
     x_hat = generator_f.predict(y.reshape((1, img_rows, img_cols, channels)))
-    
+
     plt.figure(figsize=(12, 12))
 
     images = [x[0], y_hat[0], y[0], x_hat[0]]
