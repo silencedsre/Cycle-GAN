@@ -19,9 +19,14 @@ class App extends React.Component {
 // }
   fileSelectedHandler = event => {
     console.log(event.target.files[0])
-    this.setState({
-      Selectedfile: URL.createObjectURL(event.target.files[0])
-    })
+    let file = event.target.files[0]
+    if (file){
+      this.setState({
+        Selectedfile: URL.createObjectURL(file)
+      })
+    }else{
+      return
+    }
   }
 
   fileUploadHandler = () => {
@@ -38,7 +43,7 @@ class App extends React.Component {
   }
   render(){
     return (
-      <div className='app'>
+      <div className='app'>        
         <Home fileUploadHandler={this.fileUploadHandler} 
         fileSelectedHandler={this.fileSelectedHandler} 
         Selectedfile={this.state.Selectedfile}
