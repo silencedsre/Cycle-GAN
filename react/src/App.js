@@ -29,9 +29,9 @@ class App extends React.Component {
     }
   }
 
-  fileUploadHandler = () => {
+  fileUploadHandler = (e) => {
     const fd = new FormData()
-    fd.append('file',this.state.Selectedfile, this.state.Selectedfile.name)
+    fd.append('file',this.state.Selectedfile,'download.png')
     axios.post('http://127.0.0.1:5000/monet_to_photo',fd).
       then(res=>{
         console.log(res)
