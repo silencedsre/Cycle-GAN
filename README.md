@@ -15,7 +15,5 @@ Place downloaded models inside `src/temp/models`
    
 * `python app.py`
 
-#### Cycle-GAN (Model, Heuristics and Generated Samples)
-https://docs.google.com/document/d/1ir0MhAXPPrxfUrlJ8dIQPLXmrhTduGH86O0IacGBvjc/edit?usp=sharing
-
-
+#### Cycle-GAN (Model, Heuristics, Generated Samples and UI)
+https://drive.google.com/file/d/1m_CihO_X8cg3mLzkeR63bepYuRwiX7Eg/view?usp=sharing
