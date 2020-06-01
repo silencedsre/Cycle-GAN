@@ -62,24 +62,24 @@ def monet_to_photo():
         filename = f"{filename}.jpg"
         return url_for('static', filename=filename)
 
-
 @app.route('/photo_to_monet', methods=['GET', 'POST'])
 def photo_to_monet():
     if request.method == 'POST':
         print("request files", request.files)
         file = request.files['file']
-        img = preprocess(img=file)
+        img = convert_image(file=file)
         img = img.numpy()
         print(f"Shape of image {img.shape}")
         generator_g, generator_f = load_model()
         x_hat = generator_f.predict(img.reshape((1, img_rows, img_cols, channels)))
 
-        #todo save x_hat as png or sth
-        if request.args.get('type') == '1':
-            filename = 'ok.gif'
-        else:
-            filename = 'error.gif'
-        return send_file(filename, mimetype='image/gif')
+        x_hat = (x_hat)*255
+        x_hat = x_hat[0].astype(np.uint8)
+        im = Image.fromarray(x_hat)
+        filename = time.time()
+        im.save(f"./static/{filename}.jpg")
+        filename = f"{filename}.jpg"
+        return url_for('static', filename=filename)
 
 if __name__ == "__main__":
     app.run(debug=True)
