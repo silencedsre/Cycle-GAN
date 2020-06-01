@@ -5,7 +5,8 @@ import Home from './Component/home'
 class App extends React.Component {
   state = {
     Selectedfile : null,
-    predictedImage: null
+    predictedImage: null,
+    previewImage: null
   }
 
 //   componentDidMount(){
@@ -22,7 +23,8 @@ class App extends React.Component {
     let file = event.target.files[0]
     if (file){
       this.setState({
-        Selectedfile: URL.createObjectURL(file)
+        Selectedfile: file,
+        previewImage: URL.createObjectURL(file)
       })
     }else{
       return
@@ -36,7 +38,7 @@ class App extends React.Component {
       then(res=>{
         console.log(res)
             this.setState({
-              predictedImage:res
+              predictedImage:'http://localhost:5000' + res.data
             })
       })
       
@@ -47,6 +49,7 @@ class App extends React.Component {
         <Home fileUploadHandler={this.fileUploadHandler} 
         fileSelectedHandler={this.fileSelectedHandler} 
         Selectedfile={this.state.Selectedfile}
+              previewImage={this.state.previewImage}
         predictedImage={this.state.predictedImage}/>
       </div>
     );
