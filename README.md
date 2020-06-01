@@ -2,7 +2,7 @@
 
 ## Instructions
 * `conda install requirements.txt` <br>
-However tensorflow-addons need to be installed with pip
+However `tensorflow-addons==0.6.0` need to be installed with pip
 
 
 ##### Pretrained model on 50 epochs
