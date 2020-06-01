@@ -1,4 +1,4 @@
-# Cycle-GAN (Monet-to-Photo|Photo-to-Monet generator)
+# Monet-to-Photo|Photo-to-Monet generator
 
 ## Instructions
 * `conda install requirements.txt` <br>
