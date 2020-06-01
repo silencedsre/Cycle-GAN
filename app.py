@@ -1,9 +1,11 @@
 from flask import Flask, request
 from flask_cors import CORS
-import json
 from PIL import Image
 from src.cyclegan import *
-from flask import send_file, url_for
+from flask import url_for
+
+from matplotlib.pyplot import imsave
+
 
 app = Flask(__name__)
 
@@ -19,10 +21,6 @@ def convert_image(file):
 
     img = tf.reshape(tf.cast(tf.image.resize(img, (int(img_rows), int(img_cols))), tf.float32) / 127.5 - 1,
                (1, img_rows, img_cols, channels))
-
-    # img = tf.image.convert_image_dtype(img, tf.float32)
-    # img = tf.image.resize(img, [img_cols, img_rows])
-    # img = tf.expand_dims(img, axis=0)
     return img
 
 
@@ -53,13 +51,10 @@ def monet_to_photo():
         print(f"Shape of image {img.shape}")
         generator_g, generator_f = load_model()
         y_hat = generator_g.predict(img.reshape((1, img_rows, img_cols, channels)))
-
-        y_hat = (y_hat)*255
-        y_hat = y_hat[0].astype(np.uint8)
-        im = Image.fromarray(y_hat)
+        y_hat = y_hat[0] * 0.5 + 0.5
         filename = time.time()
-        im.save(f"./static/{filename}.jpg")
-        filename = f"{filename}.jpg"
+        imsave(f'./static/{filename}.png', y_hat, format="png")
+        filename = f"{filename}.png"
         return url_for('static', filename=filename)
 
 @app.route('/photo_to_monet', methods=['GET', 'POST'])
@@ -72,13 +67,10 @@ def photo_to_monet():
         print(f"Shape of image {img.shape}")
         generator_g, generator_f = load_model()
         x_hat = generator_f.predict(img.reshape((1, img_rows, img_cols, channels)))
-
-        x_hat = (x_hat)*255
-        x_hat = x_hat[0].astype(np.uint8)
-        im = Image.fromarray(x_hat)
+        x_hat = x_hat[0] * 0.5 + 0.5
         filename = time.time()
-        im.save(f"./static/{filename}.jpg")
-        filename = f"{filename}.jpg"
+        imsave(f"./static/{filename}.png", x_hat, format="png")
+        filename = f"{filename}.png"
         return url_for('static', filename=filename)
 
 if __name__ == "__main__":
