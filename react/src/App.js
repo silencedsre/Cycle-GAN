@@ -52,7 +52,7 @@ class App extends React.Component {
       then(res=>{
         console.log(res)
             this.setState({
-              predictedMonetImage:'http://localhost:5000' + res.data
+              predictedImage:'http://localhost:5000' + res.data
             })
       })
 
@@ -65,7 +65,7 @@ class App extends React.Component {
         Selectedfile={this.state.Selectedfile}
         previewImage={this.state.previewImage}
         predictedImage={this.state.predictedImage}
-        predictedMonetImage = {this.state.predictedMonetImage}
+        // predictedMonetImage = {this.state.predictedMonetImage}
         fileUploadImageHandler={this.fileUploadImageHandler}/>
       </div>
     );
