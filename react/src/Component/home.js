@@ -1,13 +1,13 @@
 import React from 'react'
 import './home.css'
-const Home = ({fileSelectedHandler,Selectedfile, previewImage,fileUploadHandler,predictedImage}) =>{
+const Home = ({fileSelectedHandler,Selectedfile, previewImage,fileUploadHandler,predictedImage,predictedMonetImage,fileUploadImageHandler}) =>{
     console.log(previewImage)
     return(
         <div className='home'>
             <h2>Painting Generator</h2>
             <div className='image'>
                 <div className='uploadedimage'>
-                    <img className='img' src={previewImage} alt=''/>
+                    <img className='img' src={predictedMonetImage} alt=''/>
                     <input className='input' type='file' onChange={fileSelectedHandler}/>
 
                 </div>
@@ -15,7 +15,7 @@ const Home = ({fileSelectedHandler,Selectedfile, previewImage,fileUploadHandler,
                     <img className='img' src={predictedImage} alt=''/>
                     <div className='btn'>
                         <button onClick={fileUploadHandler}>Monet2Photo</button>
-                        <button>Photo2Monet</button>
+                        <button onClick={fileUploadImageHandler}>Photo2Monet</button>
                     </div>
                 </div>
             </div>

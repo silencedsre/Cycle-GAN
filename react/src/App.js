@@ -6,7 +6,8 @@ class App extends React.Component {
   state = {
     Selectedfile : null,
     predictedImage: null,
-    previewImage: null
+    previewImage: null,
+    predictedMonetImage:null
   }
 
 //   componentDidMount(){
@@ -43,14 +44,29 @@ class App extends React.Component {
       })
       
   }
+
+   fileUploadImageHandler = (e) => {
+    const fd = new FormData()
+    fd.append('file',this.state.Selectedfile,'download.png')
+    axios.post('http://127.0.0.1:5000/photo_to_monet',fd).
+      then(res=>{
+        console.log(res)
+            this.setState({
+              predictedMonetImage:'http://localhost:5000' + res.data
+            })
+      })
+
+  }
   render(){
     return (
       <div className='app'>        
         <Home fileUploadHandler={this.fileUploadHandler} 
         fileSelectedHandler={this.fileSelectedHandler} 
         Selectedfile={this.state.Selectedfile}
-              previewImage={this.state.previewImage}
-        predictedImage={this.state.predictedImage}/>
+        previewImage={this.state.previewImage}
+        predictedImage={this.state.predictedImage}
+        predictedMonetImage = {this.state.predictedMonetImage}
+        fileUploadImageHandler={this.fileUploadImageHandler}/>
       </div>
     );
   }
