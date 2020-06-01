@@ -1,12 +1,13 @@
 import React from 'react'
 import './home.css'
-const Home = ({fileSelectedHandler,Selectedfile,fileUploadHandler,predictedImage}) =>{
+const Home = ({fileSelectedHandler,Selectedfile, previewImage,fileUploadHandler,predictedImage}) =>{
+    console.log(previewImage)
     return(
         <div className='home'>
             <h2>Painting Generator</h2>
             <div className='image'>
                 <div className='uploadedimage'>
-                    <img className='img' src={Selectedfile} alt=''/>
+                    <img className='img' src={previewImage} alt=''/>
                     <input className='input' type='file' onChange={fileSelectedHandler}/>
 
                 </div>
