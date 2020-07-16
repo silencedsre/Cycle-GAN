@@ -1,7 +1,8 @@
 # Monet-to-Photo|Photo-to-Monet generator
 
 ## Instructions
-* `conda install requirements.txt` <br>
+Create an conda env and activate the env
+* `conda install --yes --file requirements.txt` <br>
 However `tensorflow-addons==0.6.0` need to be installed with pip
 
 
